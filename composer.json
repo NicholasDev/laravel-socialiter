@@ -1,5 +1,5 @@
 {
-    "name": "genealabs/laravel-socialiter",
+    "name": "nicholasdev/laravel-socialiter",
     "description": "Automatically manager user persistence and resolution for any Laravel Socialite provider.",
     "type": "library",
     "license": "MIT",
