@@ -79,6 +79,11 @@ class Socialiter
 
     protected function createCredentials(AbstractUser $socialiteUser) : SocialCredentials
     {
+        $expires = null;
+        if (isset($socialiteUser->expiresIn)) {
+            $expires = (new Carbon)->now()->addSeconds($socialiteUser->expiresIn);
+        }
+
         $socialiteCredentials = (new SocialCredentials)
             ->with("user")
             ->firstOrNew([
@@ -89,12 +94,12 @@ class Socialiter
                 "access_token" => $socialiteUser->token,
                 "avatar" => $socialiteUser->getAvatar(),
                 "email" => $socialiteUser->getEmail(),
-                "expires_at" => (new Carbon)->now()->addSeconds($socialiteUser->expiresIn),
+                "expires_at" => $expires,
                 "name" => $socialiteUser->getName(),
                 "nickname" => $socialiteUser->getNickname(),
                 "provider_id" => $socialiteUser->getId(),
                 "provider_name" => $this->driver,
-                "refresh_token" => $socialiteUser->refreshToken,
+                "refresh_token" => optional($socialiteUser)->refreshToken,
             ]);
 
         if (! $socialiteCredentials->exists) {
